@@ -10,9 +10,9 @@ class GameController
     # initialize animation
     generation_count = 0
     generations = 500
-    width = 20
+    width = 60
     height = 20
-    game = Game.new(BoardGenerator.generate(60, 20))
+    game = Game.new(BoardGenerator.generate(width, height))
 
     # alter the board
     game.board = add_glider(game.board)
@@ -36,21 +36,23 @@ class GameController
   private
 
   def self.add_glider board
-    board[3][2] = true
+    board[2][2] = true
     board[3][3] = true
     board[3][4] = true
     board[2][4] = true
-    board[1][3] = true
+    board[1][4] = true
     board
   end
 
   def self.add_beacon board
     board[10][10] = true
     board[10][11] = true
-    board[11][10] = true
+    board[9][10] = true
+    board[9][11] = true
     board[12][13] = true
-    board[13][13] = true
+    board[11][13] = true
     board[12][12] = true
+    board[11][12] = true
     board
   end
 
@@ -71,47 +73,57 @@ class GameController
   def self.check_neighbors current_board, dup_board, row, column
     neighbor_count = 0
 
-    if (row > 0 && row < 19 && column > 0 && column < 19)
-      north = current_board[(row - 1)][column]
+    north_direction = current_board[(row - 1)]
+    south_direction = current_board[(row + 1)]
+
+    if north_direction
+
+      north = north_direction[column]
       if north
         neighbor_count += 1
       end
 
-      northeast = current_board[(row - 1)][(column + 1)]
+      northeast = north_direction[(column + 1)]
       if northeast
         neighbor_count += 1
       end
 
-      east = current_board[row][(column + 1)]
-      if east
+      northwest = north_direction[(column - 1)]
+      if northwest
         neighbor_count += 1
       end
 
-      southeast = current_board[(row + 1)][(column + 1)]
-      if southeast
-        neighbor_count += 1
-      end
+    end
 
-      south = current_board[(row + 1)][column]
+    if south_direction
+
+      south = south_direction[column]
       if south
         neighbor_count += 1
       end
 
-      southwest = current_board[(row + 1)][(column - 1)]
+      southwest = south_direction[(column - 1)]
       if southwest
         neighbor_count += 1
       end
 
-      west = current_board[row][(column - 1)]
-      if west
+      southeast = south_direction[(column + 1)]
+      if southeast
         neighbor_count += 1
       end
 
-      northwest = current_board[(row - 1)][(column - 1)]
-      if northwest
-        neighbor_count += 1
-      end
     end
+
+    east = current_board[row][(column + 1)]
+    if east
+      neighbor_count += 1
+    end
+
+    west = current_board[row][(column - 1)]
+    if west
+      neighbor_count += 1
+    end
+
 
     if (!current_board[row][column] && neighbor_count == 3)
       dup_board[row][column] = true
