@@ -16,17 +16,18 @@ class GameController
 
     # alter the board
     game.board = add_glider(game.board)
-    game.board = add_beacon(game.board)
+    # game.board = add_beacon(game.board)
+    # game.board = add_block(game.board)
     reset_screen
     GameView.display_board(game.board)
-    sleep(0.5)
+    sleep(1)
 
     # start evolution
     while generation_count < generations
       game.board = evolve(game)
       reset_screen
       GameView.display_board(game.board)
-      sleep(0.2)
+      sleep(1)
       generation_count += 1
     end
 
@@ -34,6 +35,19 @@ class GameController
 
 
   private
+
+  def self.add_single board
+    board[5][5] = true
+    board
+  end
+
+  def self.add_block board
+    board[5][5] = true
+    board[6][5] = true
+    board[5][6] = true
+    board[6][6] = true
+    board
+  end
 
   def self.add_glider board
     board[2][2] = true
@@ -58,16 +72,17 @@ class GameController
 
   def self.evolve game
     current_board = game.board
-    dup_board = game.board.dup
+    dup_board = current_board.dup
+    final_board = current_board.map { |row| row }
     height = current_board.length - 1
     width = current_board.first.length - 1
 
     (0..height).each do |row|
       (0..width).each do |column|
-        dup_board = check_neighbors(current_board, dup_board, row, column)
+        final_board = check_neighbors(current_board, dup_board, row, column)
       end
     end
-    dup_board
+    final_board
   end
 
   def self.check_neighbors current_board, dup_board, row, column
