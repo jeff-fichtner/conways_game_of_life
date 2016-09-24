@@ -20,14 +20,14 @@ class GameController
     # game.board = add_block(game.board)
     reset_screen
     GameView.display_board(game.board)
-    sleep(1)
+    sleep(0.5)
 
     # start evolution
     while generation_count < generations
       game.board = evolve(game)
       reset_screen
       GameView.display_board(game.board)
-      sleep(1)
+      sleep(0.2)
       generation_count += 1
     end
 
@@ -72,17 +72,16 @@ class GameController
 
   def self.evolve game
     current_board = game.board
-    dup_board = current_board.dup
-    final_board = current_board.map { |row| row }
+    dup_board = Marshal.load(Marshal.dump(current_board))
     height = current_board.length - 1
     width = current_board.first.length - 1
 
     (0..height).each do |row|
       (0..width).each do |column|
-        final_board = check_neighbors(current_board, dup_board, row, column)
+        dup_board = check_neighbors(current_board, dup_board, row, column)
       end
     end
-    final_board
+    dup_board
   end
 
   def self.check_neighbors current_board, dup_board, row, column

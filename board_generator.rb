@@ -9,3 +9,5 @@ module BoardGenerator
     board
   end
 end
+
+p BoardGenerator.generate(60,20)
