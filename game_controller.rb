@@ -15,7 +15,8 @@ class GameController
     game = Game.new(BoardGenerator.generate(width, height))
 
     # alter the board
-    game.board = add_glider(game.board)
+    game.random_seed
+    # game.board = add_glider(game.board)
     # game.board = add_beacon(game.board)
     # game.board = add_block(game.board)
     reset_screen
@@ -27,7 +28,7 @@ class GameController
       game.board = evolve(game)
       reset_screen
       GameView.display_board(game.board)
-      sleep(0.2)
+      sleep(0.1)
       generation_count += 1
     end
 
